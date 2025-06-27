@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: layout (~{::section})">
+<section>
+    <h2>📋 All Slots</h2>
+    <table class="table">
+        <thead>
+        <tr><th>ID</th><th>Slot</th><th>From</th><th>To</th><th>Booked</th><th>Location</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="slot : ${slots}">
+            <td th:text="${slot.id}"></td>
+            <td th:text="${slot.slotNumber}"></td>
+            <td th:text="${#dates.format(slot.availableFrom, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#dates.format(slot.availableTo, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${slot.booked ? 'Yes' : 'No'}"></td>
+            <td th:text="${slot.location}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</html>

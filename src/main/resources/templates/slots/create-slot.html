@@ -1,0 +1,12 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: layout (~{::section})">
+<section>
+    <h2>➕ Create Parking Slot</h2>
+    <form th:action="@{/slots/new}" method="post">
+        <input type="text" name="slotNumber" placeholder="Slot Number" required class="form-control mb-2"/>
+        <input type="datetime-local" name="from" required class="form-control mb-2"/>
+        <input type="datetime-local" name="to" required class="form-control mb-2"/>
+        <input type="text" name="location" placeholder="Location" required class="form-control mb-2"/>
+        <button class="btn btn-success">Create</button>
+    </form>
+</section>
+</html>

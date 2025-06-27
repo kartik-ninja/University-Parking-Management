@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h2>🛠️ Admin Dashboard</h2>
+    <a th:href="@{/admin/slots}" class="btn btn-primary">Manage Slots</a>
+    <a th:href="@{/admin/violations}" class="btn btn-danger">View Violations</a>
+</section>
+</body>
+</html>

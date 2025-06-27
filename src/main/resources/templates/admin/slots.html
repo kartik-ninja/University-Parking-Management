@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>All Parking Slots</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>📋 All Parking Slots</h2>
+        <a th:href="@{/admin/slots/new}" class="btn btn-primary">➕ Add New Slot</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Slot Number</th>
+            <th>Location</th>
+            <th>Available From</th>
+            <th>Available To</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="slot : ${slots}">
+            <td th:text="${slot.id}">1</td>
+            <td th:text="${slot.slotNumber}">A1</td>
+            <td th:text="${slot.location}">Campus</td>
+            <td th:text="${slot.availableFrom != null} ? ${#temporals.format(slot.availableFrom, 'yyyy-MM-dd HH:mm')} : 'N/A'"></td>
+            <td th:text="${slot.availableTo != null} ? ${#temporals.format(slot.availableTo, 'yyyy-MM-dd HH:mm')} : 'N/A'"></td>
+            <td>
+                <span th:text="${slot.booked} ? 'Booked' : 'Available'"
+                      th:classappend="${slot.booked} ? 'text-danger' : 'text-success'"></span>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(slots)}">
+            <td colspan="6" class="text-center text-muted">No slots available.</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

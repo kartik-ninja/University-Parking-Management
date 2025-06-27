@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: layout (~{::section})">
+<section>
+    <h2>🟢 Available Slots</h2>
+    <form class="row mb-3" th:action="@{/slots/available}" method="get">
+        <div class="col">
+            <input type="text" name="location" class="form-control" placeholder="Search Location" />
+        </div>
+        <div class="col">
+            <input type="datetime-local" name="from" class="form-control"/>
+        </div>
+        <div class="col">
+            <input type="datetime-local" name="to" class="form-control"/>
+        </div>
+        <div class="col">
+            <button class="btn btn-outline-primary">Search</button>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+        <tr><th>ID</th><th>Slot</th><th>From</th><th>To</th><th>Location</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="slot : ${slots}">
+            <td th:text="${slot.id}"></td>
+            <td th:text="${slot.slotNumber}"></td>
+            <td th:text="${#dates.format(slot.availableFrom, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#dates.format(slot.availableTo, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${slot.location}"></td>
+            <td>
+                <form th:action="@{/slots/book/{id}(id=${slot.id})}" method="post">
+                    <button class="btn btn-success btn-sm">Book</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</html>

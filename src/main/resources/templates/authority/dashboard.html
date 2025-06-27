@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Authority Dashboard</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h2>🏢 Authority Dashboard</h2>
+
+    <form th:action="@{/authority/request}" method="post" class="row mb-3">
+        <div class="col">
+            <input type="datetime-local" name="startDate" class="form-control" required />
+        </div>
+        <div class="col">
+            <input type="datetime-local" name="endDate" class="form-control" required />
+        </div>
+        <div class="col">
+            <button class="btn btn-primary">Request Slot</button>
+        </div>
+    </form>
+
+    <h4>📌 Current Assignment</h4>
+    <div th:if="${currentAssignment != null}">
+        <p>Slot: <span th:text="${currentAssignment.slotNumber}"/></p>
+        <form th:action="@{/authority/release/{id}(id=${currentAssignment.id})}" method="post">
+            <button class="btn btn-danger btn-sm">Release Slot</button>
+        </form>
+    </div>
+    <div th:if="${currentAssignment == null}">No slot currently assigned.</div>
+
+    <h4 class="mt-4">📁 Past Assignments</h4>
+    <ul class="list-group" th:each="a : ${pastAssignments}">
+        <li class="list-group-item" th:text="${a.slotNumber}"></li>
+    </ul>
+</section>
+</body>
+</html>

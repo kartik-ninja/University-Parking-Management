@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Create Parking Slot</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h2>➕ Create Parking Slot</h2>
+    <form th:action="@{/admin/slots}" th:object="${slot}" method="post">
+        <div class="mb-3">
+            <label>Slot Number</label>
+            <input type="text" th:field="*{slotNumber}" class="form-control" required/>
+        </div>
+        <div class="mb-3">
+            <label>Available From</label>
+            <input type="datetime-local" th:field="*{availableFrom}" class="form-control" required/>
+        </div>
+        <div class="mb-3">
+            <label>Available To</label>
+            <input type="datetime-local" th:field="*{availableTo}" class="form-control" required/>
+        </div>
+        <div class="mb-3">
+            <label>Location</label>
+            <input type="text" th:field="*{location}" class="form-control" required/>
+        </div>
+        <button type="submit" class="btn btn-success">Create</button>
+        <a th:href="@{/admin/slots}" class="btn btn-secondary ms-2">Back</a>
+    </form>
+</section>
+</body>
+</html>
