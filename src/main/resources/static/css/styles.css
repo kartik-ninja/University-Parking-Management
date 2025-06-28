@@ -4,6 +4,18 @@ body {
     padding-top: 70px;
 }
 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 70px;
+    background-color: #f8f9fa;
+    background-image: url('/images/background-car.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+}
+
+
 .navbar {
     background-color: #003366;
 }
