@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title>📜 Booking History</title></head>
+<body>
+<section layout:fragment="content">
+    <h2>📜 Parking History</h2>
+
+    <div th:if="${assignments.isEmpty()}">
+        <p>No booking history available.</p>
+    </div>
+
+    <table class="table table-striped" th:if="${!assignments.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Slot</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${assignments}">
+            <td th:text="${a.slot.slotNumber}"></td>
+            <td th:text="${#temporals.format(a.startTime, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(a.endTime, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-4 text-center">
+        <a th:href="@{${dashboardLink}}" class="btn btn-secondary">⬅ Back to Dashboard</a>
+    </div>
+</section>
+</body>
+</html>

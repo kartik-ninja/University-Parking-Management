@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title>🚨 Report Violation</title></head>
+<body>
+<section layout:fragment="content">
+    <h2>🚨 Report a Parking Violation</h2>
+
+    <form th:action="@{${formAction}}" th:object="${violation}" method="post" class="card p-4 bg-light mt-4">
+        <div class="mb-3">
+            <label class="form-label">Vehicle Number</label>
+            <input type="text" th:field="*{vehicleNumber}" class="form-control" placeholder="e.g. UP32 AB 1234" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Violation Description</label>
+            <textarea th:field="*{description}" class="form-control" rows="3" placeholder="Describe what happened" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Parking Slot</label>
+            <select th:name="slotId" class="form-select" required>
+                <option value="">-- Select Slot --</option>
+                <option th:each="slot : ${availableSlots}"
+                        th:value="${slot.id}"
+                        th:text="${slot.slotNumber + ' (' + #temporals.format(slot.availableFrom, 'HH:mm') + ' - ' + #temporals.format(slot.availableTo, 'HH:mm') + ')'}">
+                </option>
+            </select>
+        </div>
+
+        <div class="d-grid">
+            <button class="btn btn-warning">🚨 Submit Violation</button>
+        </div>
+    </form>
+
+    <div class="mt-4 text-center">
+        <a th:href="@{${dashboardLink}}" class="btn btn-secondary">⬅ Back to Dashboard</a>
+    </div>
+</section>
+</body>
+</html>
