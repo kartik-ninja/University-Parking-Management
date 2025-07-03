@@ -7,13 +7,18 @@
 </head>
 <body>
 <section layout:fragment="content">
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>📋 All Parking Slots</h2>
         <a th:href="@{/admin/slots/new}" class="btn btn-primary">➕ Add New Slot</a>
     </div>
 
-    <table class="table table-bordered">
-        <thead class="table-light">
+    <!-- ✅ Flash Messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="table-dark">
         <tr>
             <th>ID</th>
             <th>Slot Number</th>
@@ -21,6 +26,7 @@
             <th>Available From</th>
             <th>Available To</th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -28,15 +34,22 @@
             <td th:text="${slot.id}">1</td>
             <td th:text="${slot.slotNumber}">A1</td>
             <td th:text="${slot.location}">Campus</td>
-            <td th:text="${slot.availableFrom != null} ? ${#temporals.format(slot.availableFrom, 'yyyy-MM-dd HH:mm')} : 'N/A'"></td>
-            <td th:text="${slot.availableTo != null} ? ${#temporals.format(slot.availableTo, 'yyyy-MM-dd HH:mm')} : 'N/A'"></td>
+            <td th:text="${slot.availableFrom != null} ? ${#temporals.format(slot.availableFrom, 'yyyy-MM-dd HH:mm')} : 'N/A'">N/A</td>
+            <td th:text="${slot.availableTo != null} ? ${#temporals.format(slot.availableTo, 'yyyy-MM-dd HH:mm')} : 'N/A'">N/A</td>
             <td>
                 <span th:text="${slot.booked} ? 'Booked' : 'Available'"
-                      th:classappend="${slot.booked} ? 'text-danger' : 'text-success'"></span>
+                      th:classappend="${slot.booked} ? 'badge bg-danger' : 'badge bg-success'"></span>
+            </td>
+            <td>
+                <form th:action="@{/admin/slots/delete/{id}(id=${slot.id})}" method="post"
+                      onsubmit="return confirm('Are you sure you want to delete this slot?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ Delete</button>
+                </form>
             </td>
         </tr>
+
         <tr th:if="${#lists.isEmpty(slots)}">
-            <td colspan="6" class="text-center text-muted">No slots available.</td>
+            <td colspan="7" class="text-center text-muted">No parking slots found.</td>
         </tr>
         </tbody>
     </table>

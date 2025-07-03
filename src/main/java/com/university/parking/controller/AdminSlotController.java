@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/slots")
@@ -31,4 +32,16 @@ public class AdminSlotController {
         slotService.createSlot(slot);
         return "redirect:/admin/slots";
     }
+
+    @PostMapping("/delete/{id}")
+    public String deleteSlot(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            slotService.deleteSlot(id);
+            ra.addFlashAttribute("success", "Slot deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/admin/slots";
+    }
+
 }

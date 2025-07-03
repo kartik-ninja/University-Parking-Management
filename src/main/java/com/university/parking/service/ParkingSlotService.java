@@ -8,4 +8,5 @@ public interface ParkingSlotService {
     ParkingSlot createSlot(ParkingSlot slot);
     List<ParkingSlot> listAll();
     List<ParkingSlot> listAvailable();
+    void deleteSlot(Long id);
 }

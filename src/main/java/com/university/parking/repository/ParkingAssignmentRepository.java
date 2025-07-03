@@ -31,4 +31,6 @@ public interface ParkingAssignmentRepository extends JpaRepository<ParkingAssign
     List<ParkingAssignment> searchByKeyword(@Param("keyword") String keyword);
 
     Optional<ParkingAssignment> findFirstBySlotAndActiveTrue(ParkingSlot slot);
+
+    List<ParkingAssignment> findBySlot(ParkingSlot slot);
 }
