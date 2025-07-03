@@ -3,6 +3,7 @@ package com.university.parking.controller;
 import com.university.parking.model.ParkingSlot;
 import com.university.parking.service.ParkingSlotService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +11,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/slots")
-@RequiredArgsConstructor
 public class AdminSlotController {
 
     private final ParkingSlotService slotService;
+
+    public AdminSlotController(ParkingSlotService slotService) {
+        this.slotService = slotService;
+    }
 
     @GetMapping
     public String viewSlots(Model model) {

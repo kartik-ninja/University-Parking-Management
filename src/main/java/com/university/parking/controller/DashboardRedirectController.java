@@ -8,10 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@RequiredArgsConstructor
 public class DashboardRedirectController {
 
     private final UserService userService;
+
+    public  DashboardRedirectController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/dashboard")
     public String dashboardRedirect(Authentication authentication) {

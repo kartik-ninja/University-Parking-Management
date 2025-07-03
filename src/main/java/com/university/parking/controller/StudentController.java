@@ -14,11 +14,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/student")
-@RequiredArgsConstructor
 public class StudentController {
 
     private final ParkingService parkingService;
     private final UserService userService;
+
+    public StudentController(ParkingService parkingService, UserService userService) {
+        this.parkingService = parkingService;
+        this.userService = userService;
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication auth, Model model) {

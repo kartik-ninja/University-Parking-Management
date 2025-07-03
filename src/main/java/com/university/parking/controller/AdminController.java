@@ -15,13 +15,22 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-@RequiredArgsConstructor
 public class AdminController {
 
     private final ViolationService violationService;
     private final ParkingService parkingService;
     private final ParkingAssignmentRepository assignmentRepo;
     private final ReportService  reportService;
+
+    public AdminController(ViolationService violationService,
+                           ParkingService parkingService,
+                           ParkingAssignmentRepository assignmentRepo,
+                           ReportService reportService) {
+        this.violationService = violationService;
+        this.parkingService = parkingService;
+        this.assignmentRepo = assignmentRepo;
+        this.reportService = reportService;
+    }
 
     @GetMapping("/dashboard")
     public String adminDashboard(@RequestParam(value = "role", required = false) String role,

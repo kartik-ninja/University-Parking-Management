@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequiredArgsConstructor
 public class VerificationController {
 
     private final UserService userService;
+
+    public VerificationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/verify")
     public String showVerifyPage(@RequestParam(required = false) String email, Model model) {

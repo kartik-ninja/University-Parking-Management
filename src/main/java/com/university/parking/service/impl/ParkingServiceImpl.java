@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class ParkingServiceImpl implements ParkingService {
 
     private final ParkingSlotRepository slotRepo;
@@ -21,6 +20,14 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingRequestRepository requestRepo;
     private final ParkingViolationRepository violationRepo;
     private final UserRepository userRepository;
+
+    public ParkingServiceImpl(ParkingSlotRepository slotRepo, ParkingAssignmentRepository assignmentRepo, ParkingRequestRepository requestRepo, ParkingViolationRepository violationRepo, UserRepository userRepository) {
+        this.slotRepo = slotRepo;
+        this.assignmentRepo = assignmentRepo;
+        this.requestRepo = requestRepo;
+        this.violationRepo = violationRepo;
+        this.userRepository = userRepository;
+    }
 
     @Autowired
     private EmailService emailService;

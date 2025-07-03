@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ViolationServiceImpl implements ViolationService {
 
     private final ParkingViolationRepository violationRepository;
+
+    public ViolationServiceImpl(ParkingViolationRepository violationRepository) {
+        this.violationRepository = violationRepository;
+    }
 
     @Override
     public void reportViolation(ParkingViolation violation) {

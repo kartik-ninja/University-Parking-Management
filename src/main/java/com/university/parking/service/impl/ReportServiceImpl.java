@@ -15,13 +15,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
     private static final Font TITLE = new Font(Font.HELVETICA, 16, Font.BOLD);
     private static final Font HEADER = new Font(Font.HELVETICA, 12, Font.BOLD);
     private static final Font BODY = new Font(Font.HELVETICA, 12);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    public ReportServiceImpl() {
+    }
 
     @Override
     public void generateBookingReport(List<ParkingAssignment> bookings, HttpServletResponse resp) throws Exception {

@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/profile")
-@RequiredArgsConstructor
 public class UserProfileController {
 
     private final UserService userService;
+
+    public  UserProfileController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public String viewProfile(Authentication auth, Model model) {

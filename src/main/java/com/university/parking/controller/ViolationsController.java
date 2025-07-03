@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/violations")
-@RequiredArgsConstructor
 public class ViolationsController {
 
     private final ViolationService violationService;
     private final ParkingService parkingService;
+
+    public ViolationsController(ParkingService parkingService, ViolationService violationService) {
+        this.parkingService = parkingService;
+        this.violationService = violationService;
+    }
 
     @GetMapping
     public String showViolations(Model model) {

@@ -15,11 +15,15 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/teacher")
-@RequiredArgsConstructor
 public class TeacherController {
 
     private final ParkingService parkingService;
     private final UserService userService;
+
+    public TeacherController(ParkingService parkingService, UserService userService) {
+        this.parkingService = parkingService;
+        this.userService = userService;
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication auth, Model model) {

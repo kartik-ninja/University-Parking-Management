@@ -17,11 +17,15 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/authority")
-@RequiredArgsConstructor
 public class AuthorityController {
 
     private final ParkingService parkingService;
     private final UserService userService;
+
+    public  AuthorityController(ParkingService parkingService, UserService userService) {
+        this.parkingService = parkingService;
+        this.userService = userService;
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication auth, Model model) {

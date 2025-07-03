@@ -15,12 +15,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ParkingSlotServiceImpl implements ParkingSlotService {
 
     private final ParkingSlotRepository parkingSlotRepository;
     private final ParkingAssignmentRepository parkingAssignmentRepository;
     private final ParkingViolationRepository  parkingViolationRepository;
+
+    public ParkingSlotServiceImpl(ParkingSlotRepository parkingSlotRepository, ParkingAssignmentRepository parkingAssignmentRepository, ParkingViolationRepository parkingViolationRepository) {
+        this.parkingSlotRepository = parkingSlotRepository;
+        this.parkingAssignmentRepository = parkingAssignmentRepository;
+        this.parkingViolationRepository = parkingViolationRepository;
+    }
 
     @Override
     public ParkingSlot createSlot(ParkingSlot slot) {

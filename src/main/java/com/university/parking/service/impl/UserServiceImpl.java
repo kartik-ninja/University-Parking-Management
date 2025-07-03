@@ -21,12 +21,17 @@ import java.util.Collections;
 import java.util.Random;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final JavaMailSender javaMailSender;
+
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, JavaMailSender javaMailSender) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.javaMailSender = javaMailSender;
+    }
 
     @Lazy
     @Autowired
