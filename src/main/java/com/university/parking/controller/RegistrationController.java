@@ -43,6 +43,7 @@ public class RegistrationController {
         }
 
         userService.save(dto);
-        return "redirect:/login?registered";
+        return "redirect:/verify?email=" + dto.getEmail();
+
     }
 }

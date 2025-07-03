@@ -7,33 +7,69 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <h2>🏢 Authority Dashboard</h2>
+    <h2 class="mb-4">Welcome, <span th:text="${user.firstName}">Authority</span> 👮‍♂️</h2>
 
-    <form th:action="@{/authority/request}" method="post" class="row mb-3">
-        <div class="col">
-            <input type="datetime-local" name="startDate" class="form-control" required />
-        </div>
-        <div class="col">
-            <input type="datetime-local" name="endDate" class="form-control" required />
-        </div>
-        <div class="col">
-            <button class="btn btn-primary">Request Slot</button>
-        </div>
-    </form>
+    <!-- Flash Messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <h4>📌 Current Assignment</h4>
-    <div th:if="${currentAssignment != null}">
-        <p>Slot: <span th:text="${currentAssignment.slotNumber}"/></p>
-        <form th:action="@{/authority/release/{id}(id=${currentAssignment.id})}" method="post">
-            <button class="btn btn-danger btn-sm">Release Slot</button>
-        </form>
+    <!-- View Violations Button -->
+    <div class="mb-4 text-end">
+        <a href="/violations" class="btn btn-outline-warning">🚨 View All Violations</a>
     </div>
-    <div th:if="${currentAssignment == null}">No slot currently assigned.</div>
 
-    <h4 class="mt-4">📁 Past Assignments</h4>
-    <ul class="list-group" th:each="a : ${pastAssignments}">
-        <li class="list-group-item" th:text="${a.slotNumber}"></li>
-    </ul>
+    <!-- Current Assignments -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">📌 Your Current Assignments</div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                <tr><th>Slot</th><th>From</th><th>To</th><th>Action</th></tr>
+                </thead>
+                <tbody th:each="a : ${currentAssignments}">
+                <tr>
+                    <td th:text="${a.slot.slotNumber}"></td>
+                    <td th:text="${#temporals.format(a.startTime,'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${#temporals.format(a.endTime,'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <form th:action="@{/authority/release/{id}(id=${a.id})}" method="post">
+                            <button class="btn btn-danger btn-sm">Release</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Available Slots -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">🅿️ Available Slots</div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                <tr><th>Slot</th><th>From</th><th>To</th><th>Book</th></tr>
+                </thead>
+                <tbody th:each="s : ${availableSlots}">
+                <tr>
+                    <td th:text="${s.slotNumber}"></td>
+                    <td th:text="${#temporals.format(s.availableFrom,'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${#temporals.format(s.availableTo,'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <form th:action="@{/authority/book/{id}(id=${s.id})}" method="post">
+                            <button class="btn btn-success btn-sm">Book</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-end mt-3">
+        <a class="btn btn-outline-dark" th:href="@{/authority/history}">📜 View Booking History</a>
+    </div>
+
 </section>
 </body>
 </html>

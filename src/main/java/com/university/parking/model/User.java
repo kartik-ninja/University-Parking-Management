@@ -29,9 +29,14 @@ public class User {
     @Column(nullable = false, unique = true)
     private String universityId;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
+
+    @Column(nullable = false)
+    private boolean enabled = false;
+
+    private String verificationCode;
 }

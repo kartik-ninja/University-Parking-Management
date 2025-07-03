@@ -43,11 +43,15 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**").permitAll()
+                        .requestMatchers(
+                                "/", "/login", "/register", "/verify", "/css/**", "/js/**", "/img/**", "/images/**"
+                        ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/student/**").hasRole("STUDENT")
                         .requestMatchers("/teacher/**").hasRole("TEACHER")
                         .requestMatchers("/authority/**").hasRole("AUTHORITY")
+                        .requestMatchers("/dashboard", "/profile/**").authenticated()
+                        .requestMatchers("/violations").hasAnyRole("ADMIN", "AUTHORITY") // shared violations page
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -57,7 +61,7 @@ public class SecurityConfiguration {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/auth/login?logout")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .permitAll()
@@ -69,17 +73,20 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationSuccessHandler customSuccessHandler() {
         return (request, response, authentication) -> {
-            String role = authentication.getAuthorities().stream()
+            var authorities = authentication.getAuthorities().stream()
                     .map(auth -> auth.getAuthority())
-                    .findFirst()
-                    .orElse("");
+                    .toList();
 
-            switch (role) {
-                case "ROLE_ADMIN" -> response.sendRedirect("/admin/dashboard");
-                case "ROLE_TEACHER" -> response.sendRedirect("/teacher/dashboard");
-                case "ROLE_STUDENT" -> response.sendRedirect("/student/dashboard");
-                case "ROLE_AUTHORITY" -> response.sendRedirect("/authority/dashboard");
-                default -> response.sendRedirect("/login?error");
+            if (authorities.contains("ROLE_ADMIN")) {
+                response.sendRedirect("/admin/dashboard");
+            } else if (authorities.contains("ROLE_TEACHER")) {
+                response.sendRedirect("/teacher/dashboard");
+            } else if (authorities.contains("ROLE_STUDENT")) {
+                response.sendRedirect("/student/dashboard");
+            } else if (authorities.contains("ROLE_AUTHORITY")) {
+                response.sendRedirect("/authority/dashboard");
+            } else {
+                response.sendRedirect("/auth/login?error");
             }
         };
     }

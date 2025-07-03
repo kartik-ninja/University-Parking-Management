@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Reported Violations</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h2>🚨 Reported Violations</h2>
+
+    <!-- 🚫 This form is only for users who are NOT ADMIN or AUTHORITY -->
+    <div sec:authorize="!hasAnyRole('ADMIN', 'AUTHORITY')">
+        <form th:action="@{/violations/add}" th:object="${violation}" method="post" class="mb-4">
+            <div class="mb-2">
+                <label>Description</label>
+                <input type="text" th:field="*{description}" class="form-control" placeholder="Violation details" required />
+            </div>
+            <div class="mb-2">
+                <label>Reported By</label>
+                <input type="text" th:field="*{reportedBy}" class="form-control" placeholder="Your Name" required />
+            </div>
+            <div class="mb-2">
+                <label>Slot</label>
+                <select name="slotId" class="form-select">
+                    <option value="">Select Slot</option>
+                    <option th:each="s : ${availableSlots}" th:value="${s.id}" th:text="${s.slotNumber}"></option>
+                </select>
+            </div>
+            <button class="btn btn-warning">Report</button>
+        </form>
+    </div>
+
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Vehicle</th>
+            <th>Slot</th>
+            <th>Reported By</th>
+            <th>Description</th>
+            <th>When</th>
+        </tr>
+        </thead>
+        <tbody th:each="v : ${violations}">
+        <tr>
+            <td th:text="${v.vehicleNumber}">UP0000</td>
+            <td th:text="${v.slot != null ? v.slot.slotNumber : 'N/A'}">Slot</td>
+            <td th:text="${v.reportedBy}">Reported By</td>
+            <td th:text="${v.description}">Description</td>
+            <td th:text="${v.reportedAt != null ? #temporals.format(v.reportedAt, 'yyyy-MM-dd HH:mm') : 'N/A'}">Date</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

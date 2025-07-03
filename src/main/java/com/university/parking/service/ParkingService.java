@@ -17,17 +17,24 @@ public interface ParkingService {
     List<ParkingSlot> getBookedSlots();
     List<ParkingSlot> searchSlotsByLocation(String location);
     List<ParkingSlot> searchSlotsByDate(LocalDateTime from, LocalDateTime to);
-    boolean bookSlot(Long slotId, User user);
     boolean cancelSlot(Long slotId, User user);
 
     // ✅ New (used in Authority/Student/TeacherController)
-    ParkingAssignment getActiveAssignmentForUser(Long userId);
+    ParkingAssignment getActiveAssignmentForUser(Long userId); // for STUDENT, TEACHER
+    List<ParkingAssignment> getAllActiveAssignmentsForUser(Long userId); // NEW
     List<ParkingAssignment> getPastAssignmentsForUser(Long userId);
     List<ParkingRequest> getUserRequests(Long userId);
     void createParkingRequest(Long userId, String role, LocalDateTime from, LocalDateTime to);
     void releaseParkingSlot(Long assignmentId);
+    void bookSlot(Long slotId, User user);
+    ParkingSlot findSlotById(Long slotId);
+    void reportViolation(ParkingViolation violation);
 
     // ✅ Admin
     List<ParkingViolation> getAllViolations();
-    void reportViolation(ParkingViolation violation);
+
+    List<ParkingAssignment> getAllAssignments();
+    List<ParkingAssignment> getAssignmentsByRole(String role);
+    List<ParkingAssignment> searchAssignments(String keyword);
+
 }

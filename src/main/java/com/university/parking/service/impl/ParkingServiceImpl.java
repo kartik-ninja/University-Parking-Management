@@ -2,8 +2,10 @@ package com.university.parking.service.impl;
 
 import com.university.parking.model.*;
 import com.university.parking.repository.*;
+import com.university.parking.service.EmailService;
 import com.university.parking.service.ParkingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,9 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingRequestRepository requestRepo;
     private final ParkingViolationRepository violationRepo;
     private final UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public ParkingSlot createSlot(String slotNumber, LocalDateTime from, LocalDateTime to, String location) {
@@ -52,14 +57,20 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public boolean bookSlot(Long slotId, User user) {
+    public void bookSlot(Long slotId, User user) {
+        List<ParkingAssignment> activeAssignments = assignmentRepo.findAllByUserAndActiveTrue(user);
+
+        // Block multiple bookings for STUDENT or TEACHER
+        if (!user.getRoles().stream().anyMatch(r -> r.getName().equals("AUTHORITY")) && !activeAssignments.isEmpty()) {
+            throw new IllegalStateException("You can only book one active slot at a time.");
+        }
+
         Optional<ParkingSlot> opt = slotRepo.findById(slotId);
         if (opt.isPresent() && !opt.get().isBooked()) {
             ParkingSlot slot = opt.get();
             slot.setBooked(true);
             slot.setBookedBy(user);
 
-            // create assignment
             ParkingAssignment assignment = new ParkingAssignment();
             assignment.setSlot(slot);
             assignment.setUser(user);
@@ -69,10 +80,20 @@ public class ParkingServiceImpl implements ParkingService {
 
             assignmentRepo.save(assignment);
             slotRepo.save(slot);
-            return true;
+
+            // ✅ Send Email
+            String subject = "🅿️ Slot Booking Confirmed";
+            String body = "Dear " + user.getFirstName() + ",\n\n" +
+                    "Your parking slot " + slot.getSlotNumber() + " has been successfully booked from " +
+                    slot.getAvailableFrom() + " to " + slot.getAvailableTo() + ".\n\n" +
+                    "Thank you,\nUniversity Parking Team";
+
+            emailService.sendEmail(user.getEmail(), subject, body);
+        } else {
+            throw new IllegalStateException("Slot is already booked or does not exist.");
         }
-        return false;
     }
+
 
     @Override
     public boolean cancelSlot(Long slotId, User user) {
@@ -92,7 +113,15 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public ParkingAssignment getActiveAssignmentForUser(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
-        return user != null ? assignmentRepo.findByUserAndActiveTrue(user) : null;
+        if (user == null) return null;
+
+        return assignmentRepo.findFirstByUserAndActiveTrue(user).orElse(null);
+    }
+
+    @Override
+    public List<ParkingAssignment> getAllActiveAssignmentsForUser(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        return user == null ? List.of() : assignmentRepo.findAllByUserAndActiveTrue(user);
     }
 
     @Override
@@ -147,4 +176,26 @@ public class ParkingServiceImpl implements ParkingService {
         violation.setReportedAt(LocalDateTime.now());
         violationRepo.save(violation);
     }
+
+    @Override
+    public ParkingSlot findSlotById(Long slotId) {
+        return slotRepo.findById(slotId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid slot ID"));
+    }
+
+    @Override
+    public List<ParkingAssignment> getAllAssignments() {
+        return assignmentRepo.findAll();
+    }
+
+    @Override
+    public List<ParkingAssignment> getAssignmentsByRole(String role) {
+        return assignmentRepo.findByUserRole("ROLE_" + role.toUpperCase());
+    }
+
+    @Override
+    public List<ParkingAssignment> searchAssignments(String keyword) {
+        return assignmentRepo.searchByKeyword(keyword);
+    }
+
 }
